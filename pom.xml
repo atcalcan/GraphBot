@@ -16,17 +16,17 @@
         </dependency>
     </dependencies>
 
-<!--    <repositories>-->
-<!--        <repository>-->
-<!--            <id>jcenter</id>-->
-<!--            <name>jcenter-bintray</name>-->
-<!--            <url>https://jcenter.bintray.com</url>-->
-<!--        </repository>-->
-<!--    </repositories>-->
+    <!--    <repositories>-->
+    <!--        <repository>-->
+    <!--            <id>jcenter</id>-->
+    <!--            <name>jcenter-bintray</name>-->
+    <!--            <url>https://jcenter.bintray.com</url>-->
+    <!--        </repository>-->
+    <!--    </repositories>-->
 
     <properties>
         <maven.compiler.source>18</maven.compiler.source>
         <maven.compiler.target>18</maven.compiler.target>
     </properties>
-    
+
 </project>
