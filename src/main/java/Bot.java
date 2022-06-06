@@ -18,5 +18,4 @@ public class Bot {
         jda.addEventListener(new Calculate());
 
     }
-
 }

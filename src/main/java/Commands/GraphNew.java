@@ -12,9 +12,9 @@ public class GraphNew extends ListenerAdapter {
         if (e.getMessage().getContentRaw().indexOf("!graph new; ") == 0) {
             if (e.getMessage().getContentRaw().matches("(!graph new; )+(directed;|undirected;)+[(\\ )+(a-zA-Z0-9)+]+(;)[(\\ )+(a-zA-Z0-9)+(\\ )+(a-zA-Z0-9)+(,)]+(;)")) {
                 String param[] = e.getMessage().getContentRaw().split("; ");
-                boolean success = newGraph(e.getAuthor().getName(), param);
-                if (success == true) {
-                    e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", graful tau a fost creat cu succes. Poti vedea ce grafuri ai folosind \"!graph show\".").queue();
+                String name = newGraph(e.getAuthor().getName(), param);
+                if (!name.equals(null)) {
+                    e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", graful tau *" + name + "* a fost creat cu succes. Poti vedea ce grafuri ai folosind \"!graph show\", sau poţi să îţi vezi orice graf folosind \"!graph display g?\".").queue();
                 } else {
                     e.getChannel().sendMessage("eroare :(").queue();
                 }
@@ -24,7 +24,7 @@ public class GraphNew extends ListenerAdapter {
         }
     }
 
-    boolean newGraph(String user, String param[]) {
+    String newGraph(String user, String param[]) {
         try {
             var g = new Graph(user);
             g.setDir(param[1]);
@@ -43,9 +43,9 @@ public class GraphNew extends ListenerAdapter {
                 g.addEdge(labels[0], labels[1]);
             }
             addGraph(g);
-            return true;
+            return name;
         } catch (ArrayIndexOutOfBoundsException e) {
-            return false;
+            return null;
         }
 
     }

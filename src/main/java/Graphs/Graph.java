@@ -1,9 +1,6 @@
 package Graphs;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Graph {
     private String user;
@@ -29,11 +26,18 @@ public class Graph {
     public void addEdge(String label1, String label2) {
         Vertex v1 = new Vertex(label1);
         Vertex v2 = new Vertex(label2);
-        if (adjVertices.get(v1) != null) {
-            adjVertices.get(v1).add(v2);
-        }
-        if (adjVertices.get(v2) != null) {
-            adjVertices.get(v2).add(v1);
+        if (this.dir.equalsIgnoreCase("undirected")) {
+            if (adjVertices.get(v1) != null) {
+                adjVertices.get(v1).add(v2);
+            }
+            if (adjVertices.get(v2) != null) {
+                adjVertices.get(v2).add(v1);
+            }
+        } else if (this.dir.equalsIgnoreCase("directed")) {
+            if (adjVertices.get(v1) != null) {
+                adjVertices.get(v1).add(v2);
+            }
+
         }
     }
 
@@ -46,10 +50,6 @@ public class Graph {
             eV1.remove(v2);
         if (eV2 != null)
             eV2.remove(v1);
-    }
-
-    Graph() {
-
     }
 
     @Override
@@ -74,7 +74,17 @@ public class Graph {
         return user;
     }
 
-    List<Vertex> getAdjVertices(String label) {
+    public String getDir() {
+        return dir;
+    }
+
+    public List<Vertex> getAdjVertices(String label) {
         return adjVertices.get(new Vertex(label));
+    }
+
+    public List<Vertex> getAllVertices() {
+        Set<Vertex> all = adjVertices.keySet();
+        List<Vertex> result = new ArrayList<>(all);
+        return result;
     }
 }

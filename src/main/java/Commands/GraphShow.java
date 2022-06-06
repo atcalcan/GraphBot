@@ -9,9 +9,9 @@ public class GraphShow extends ListenerAdapter {
         if (e.getMessage().getContentRaw().indexOf("!graph show") == 0) {
             String userGraphs = AllGraphs.whatGraphs(e.getAuthor().getName());
             if (userGraphs != "") {
-                e.getChannel().sendMessage(e.getAuthor().getAsMention() + "'s graphs are: " + AllGraphs.whatGraphs(e.getAuthor().getName())).queue();
+                e.getChannel().sendMessage("Grafurile lui " + e.getAuthor().getAsMention() + " sunt: " + AllGraphs.whatGraphs(e.getAuthor().getName())).queue();
             } else {
-                e.getChannel().sendMessage(e.getAuthor().getAsMention() + " has no graphs yet.").queue();
+                e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", nu ai creat grafuri încă. Poţi face asta folosind *\"!graph new\"*. Pentru mai multe detalii, foloseşte *\"!graph help\"*.").queue();
             }
 
         }

@@ -9,6 +9,10 @@ public class Vertex {
         this.label = label;
     }
 
+    public String getLabel() {
+        return this.label;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(label);

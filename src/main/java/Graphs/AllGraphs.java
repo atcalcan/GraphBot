@@ -23,7 +23,7 @@ public class AllGraphs {
         for (Object allGraph : allGraphs) {
             Graph graph = (Graph) allGraph;
             if (Objects.equals(graph.getUser(), user)) {
-                graphs = graphs + graph.getName() + " ";
+                graphs = "*" + graphs + graph.getName() + "* ";
             }
         }
         return graphs;
