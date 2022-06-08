@@ -3,7 +3,7 @@ package Graphs;
 import java.util.*;
 
 public class Graph {
-    private String user;
+    private final String user;
     private String dir;
     private String name;
     private Map<Vertex, List<Vertex>> adjVertices;
@@ -55,7 +55,7 @@ public class Graph {
     @Override
     public String toString() {
 
-        return super.toString();
+        return new GraphMatrix(this).toString();
     }
 
     public void setDir(String dir) {

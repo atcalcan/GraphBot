@@ -6,11 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="AlgoBot-GraphBot" />
+        <module name="GraphBot" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="AlgoBot-GraphBot" target="18" />
+      <module name="GraphBot" target="18" />
     </bytecodeTargetLevel>
   </component>
 </project>

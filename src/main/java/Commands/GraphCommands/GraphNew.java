@@ -1,14 +1,19 @@
-package Commands;
+package Commands.GraphCommands;
 
 import Graphs.Graph;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import static Graphs.AllGraphs.addGraph;
 import static Graphs.AllGraphs.getAllGraphs;
 
-public class GraphNew extends ListenerAdapter {
-    public void onMessageReceived(MessageReceivedEvent e) {
+public class GraphNew implements Runnable {
+    private MessageReceivedEvent e;
+
+    public GraphNew(MessageReceivedEvent e) {
+        this.e = e;
+    }
+
+    public void run() {
         if (e.getMessage().getContentRaw().indexOf("!graph new; ") == 0) {
             if (e.getMessage().getContentRaw().matches("(!graph new; )+(directed;|undirected;)+[(\\ )+(a-zA-Z0-9)+]+(;)[(\\ )+(a-zA-Z0-9)+(\\ )+(a-zA-Z0-9)+(,)]+(;)")) {
                 String param[] = e.getMessage().getContentRaw().split("; ");

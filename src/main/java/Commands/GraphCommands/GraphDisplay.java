@@ -1,4 +1,4 @@
-package Commands;
+package Commands.GraphCommands;
 
 import Graphs.Graph;
 import Graphs.Vertex;
@@ -6,32 +6,41 @@ import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.MutableGraph;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static Graphs.AllGraphs.checkGraph;
 import static Graphs.AllGraphs.getGraph;
 import static guru.nidi.graphviz.model.Factory.mutGraph;
 import static guru.nidi.graphviz.model.Factory.mutNode;
 
-public class GraphDisplay extends ListenerAdapter {
-    public void onMessageReceived(MessageReceivedEvent e) {
-        if (e.getMessage().getContentRaw().indexOf("!graph display") == 0) {
-            String param[] = e.getMessage().getContentRaw().split(" ");
+public class GraphDisplay implements Runnable {
+    private MessageReceivedEvent e;
+
+    public GraphDisplay(MessageReceivedEvent e) {
+        this.e = e;
+    }
+
+    public void run() {
+        String param[] = e.getMessage().getContentRaw().split(" ");
+        if (checkGraph(e.getAuthor().getName(), param[2])) {
             Graph g = getGraph(param[2]);
             RenderGraph(g, e);
+        } else {
+            e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", nu ai creat încă un graf numit *" + param[2] + "*.").queue();
+        }
 //            File graphFile = new File("graph.png");
 
-
-        }
 
     }
 
     private void RenderGraph(Graph g, MessageReceivedEvent e) {
+
         MutableGraph myGraph = mutGraph(g.getName());
         if (g.getDir().equalsIgnoreCase("directed")) {
             myGraph.setDirected(true);
@@ -52,14 +61,21 @@ public class GraphDisplay extends ListenerAdapter {
                 visited.add(i);
             }
         }
-        File graphFile = new File("graph.png");
+//        File graphFile = new File("graph.png");
+        PipedInputStream inputPipe;
+        PipedOutputStream outputPipe;
         try {
-            Graphviz.fromGraph(myGraph).width(747).render(Format.PNG).toFile(graphFile);
-        } catch (IOException err) {
-            throw new RuntimeException(err);
+//            Graphviz.fromGraph(myGraph).width(747).render(Format.PNG).toFile(graphFile);
+            inputPipe = new PipedInputStream(10000 * 1024);
+            outputPipe = new PipedOutputStream(inputPipe);
+            System.out.println("1");
+            Graphviz.fromGraph(myGraph).width(500).render(Format.PNG).toOutputStream(outputPipe);
+            System.out.println("2");
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
-        if (Objects.nonNull(graphFile)) {
-            e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", acesta este graful tău *" + g.getName() + "*.").addFile(graphFile).queue();
+        e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", acesta este graful tău *" + g.getName() + "*.").addFile(inputPipe, "yourGraph.png").queue();
+        if (Objects.nonNull(inputPipe)) {
         } else {
             e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", nu am reuşit să generez o imagine pentru graful tău.").queue();
         }

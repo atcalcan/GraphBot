@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/AlgoBot-GraphBot.iml" filepath="$PROJECT_DIR$/.idea/AlgoBot-GraphBot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/GraphBot.iml" filepath="$PROJECT_DIR$/.idea/GraphBot.iml" />
     </modules>
   </component>
 </project>
