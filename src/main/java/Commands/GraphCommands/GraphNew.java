@@ -1,9 +1,10 @@
 package Commands.GraphCommands;
 
+import Graphs.AllGraphs;
+import Graphs.Database.DAO.GraphDAO;
 import Graphs.Graph;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-import static Graphs.AllGraphs.addGraph;
 import static Graphs.AllGraphs.getAllGraphs;
 
 public class GraphNew implements Runnable {
@@ -18,14 +19,19 @@ public class GraphNew implements Runnable {
             if (e.getMessage().getContentRaw().matches("(!graph new; )+(directed;|undirected;)+[(\\ )+(a-zA-Z0-9)+]+(;)[(\\ )+(a-zA-Z0-9)+(\\ )+(a-zA-Z0-9)+(,)]+(;)")) {
                 String param[] = e.getMessage().getContentRaw().split("; ");
                 String name = newGraph(e.getAuthor().getName(), param);
-                if (!name.equals(null)) {
-                    e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", graful tau *" + name + "* a fost creat cu succes. Poti vedea ce grafuri ai folosind \"!graph show\", sau poţi să îţi vezi orice graf folosind \"!graph display g?\".").queue();
+                if (!name.equals("ERROR")) {
+                    e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", graful tau *" + name + "* a fost creat cu succes. Poti vedea ce grafuri ai folosind `!graph show`, sau poţi să îţi vezi orice graf folosind `!graph display g?`.").queue();
                 } else {
-                    e.getChannel().sendMessage("eroare :(").queue();
+
+                    e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", a apărut o eroare la crearea grafului tău. Verifică parametrii oferiţi. *Pentru a putea să creez o muchie, trebuie ca ambele noduri să fi fost declarate*.").queue();
+
                 }
-            } else {
-                e.getChannel().sendMessage("eroare").queue();
             }
+        } else {
+            e.getChannel().sendMessage("A apărut o eroare de formatare. Comanda de creare se scrie astfel:\n```!graph new; (directed /undirected ); node1 node2 ... ; edge1, edge2, ...;\n- creează un graf nou\n" +
+                    "node1, node2 - numele nodurilor\n" +
+                    "edge1, edge2 - muchii de forma: \"nume1 nume2\"```").queue();
+
         }
     }
 
@@ -47,10 +53,12 @@ public class GraphNew implements Runnable {
                 String labels[] = edges[i].split(" ");
                 g.addEdge(labels[0], labels[1]);
             }
-            addGraph(g);
+            GraphDAO.AddGraph(g);
+            AllGraphs.allGraphs = GraphDAO.getAllDBGraphs();
+            System.out.println(g);
             return name;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            return null;
+        } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
+            return "ERROR";
         }
 
     }

@@ -1,9 +1,6 @@
 package Graphs;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GraphMatrix {
     private final Map<Integer, Vertex> chei = new HashMap<>();
@@ -26,17 +23,24 @@ public class GraphMatrix {
         V = g.getAllVertices().size();
         for (int i = 0; i < V; i++) {
             Vertex indVer = chei.get(i);
-            List<Vertex> adjIndVer = g.getAdjVertices(indVer.getLabel());
+            List<Vertex> adjIndVer = g.getVertexAdjVertices(indVer.getLabel());
             for (Vertex v : adjIndVer) {
                 graph[cheiInvers.get(indVer)][cheiInvers.get(v)] = 1;
             }
         }
-        System.out.println(Arrays.deepToString(graph));
+//        System.out.println(Arrays.deepToString(graph));
+    }
+
+    public int[][] getGraphMatrixInt() {
+        return this.graph;
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.deepToString(graph);
     }
 
     boolean isSafeHamCycle(int v, int graph[][], int path[], int pos) {
-        /* Check if this vertex is an adjacent vertex of
-           the previously added vertex. */
         if (graph[path[pos - 1]][v] == 0) {
             return false;
         }
@@ -69,6 +73,32 @@ public class GraphMatrix {
         return false;
     }
 
+    boolean hamPathUtil(int graph[][], int path[], int pos) {
+//        System.out.println(Arrays.toString(path));
+        int cateGasite = V;
+        for (int count = 0; count < V; count++) {
+            if (path[count] == -1) {
+                cateGasite--;
+            }
+        }
+        if (cateGasite == V) {
+            return true;
+        }
+
+
+        for (int v = 0; v < V; v++) {
+            if (isSafeHamCycle(v, graph, path, pos)) {
+                path[pos] = v;
+
+                if (hamPathUtil(graph, path, pos + 1))
+                    return true;
+                path[pos] = -1;
+            }
+        }
+
+        return false;
+    }
+
     public String hamCycle() {
         path = new int[V];
         for (int i = 0; i < V; i++)
@@ -80,6 +110,19 @@ public class GraphMatrix {
         return printSolutionHamCycle(path);
     }
 
+    public String hamPath() {
+        for (int start = 0; start < V; start++) {
+            path = new int[V];
+            for (int i = 0; i < V; i++)
+                path[i] = -1;
+            path[0] = start;
+            if (hamPathUtil(graph, path, 1)) {
+                return printSolutionHamPath(path);
+            }
+        }
+        return "NO";
+    }
+
     String printSolutionHamCycle(int path[]) {
         String solution = "";
         for (int i = 0; i < V; i++)
@@ -88,6 +131,14 @@ public class GraphMatrix {
         solution = solution + chei.get(path[0]).getLabel();
         return solution;
     }
+
+    String printSolutionHamPath(int path[]) {
+        String solution = "";
+        for (int i = 0; i < V - 1; i++)
+            solution = solution + chei.get(path[i]).getLabel() + " => ";
+        return solution + chei.get(path[V - 1]).getLabel();
+    }
+
 
     boolean isSafeColoring(int v, int graph[][], int color[], int c) {
         for (int i = 0; i < V; i++)
@@ -117,7 +168,7 @@ public class GraphMatrix {
         return false;
     }
 
-    String graphColoringTest(int graph[][], int m) {
+    public String graphColoringTest(int graph[][], int m) {
         color = new int[V];
         for (int i = 0; i < V; i++)
             color[i] = 0;
@@ -143,10 +194,12 @@ public class GraphMatrix {
         int m = V + 1;
         String rezultat;
         do {
-            m = m-1;
+            m = m - 1;
             rezultat = graphColoringTest(graph, m);
-        } while (rezultat!="NO");
-        m = m+1;
+        } while (rezultat != "NO");
+        m = m + 1;
         return m + ";" + graphColoringTest(graph, m);
     }
+
+
 }

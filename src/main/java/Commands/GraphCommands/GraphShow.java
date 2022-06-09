@@ -13,10 +13,10 @@ public class GraphShow implements Runnable {
     public void run() {
         if (e.getMessage().getContentRaw().indexOf("!graph show") == 0) {
             String userGraphs = AllGraphs.whatGraphs(e.getAuthor().getName());
-            if (userGraphs != "") {
-                e.getChannel().sendMessage("Grafurile lui " + e.getAuthor().getAsMention() + " sunt: " + AllGraphs.whatGraphs(e.getAuthor().getName())).queue();
+            if (!userGraphs.equals("")) {
+                e.getChannel().sendMessage("Grafurile lui " + e.getAuthor().getAsMention() + " sunt: " + AllGraphs.whatGraphs(e.getAuthor().getName()) + ".").queue();
             } else {
-                e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", nu ai creat grafuri încă. Poţi face asta folosind *\"!graph new\"*. Pentru mai multe detalii, foloseşte *\"!graph help\"*.").queue();
+                e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", nu ai creat grafuri încă. Poţi face asta folosind `!graph new`. Pentru mai multe detalii, foloseşte `!graph`.").queue();
             }
         }
     }

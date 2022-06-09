@@ -12,7 +12,6 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static Graphs.AllGraphs.checkGraph;
 import static Graphs.AllGraphs.getGraph;
@@ -27,16 +26,17 @@ public class GraphDisplay implements Runnable {
     }
 
     public void run() {
-        String param[] = e.getMessage().getContentRaw().split(" ");
-        if (checkGraph(e.getAuthor().getName(), param[2])) {
-            Graph g = getGraph(param[2]);
-            RenderGraph(g, e);
-        } else {
-            e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", nu ai creat încă un graf numit *" + param[2] + "*.").queue();
+        try {
+            String param[] = e.getMessage().getContentRaw().split(" ");
+            if (checkGraph(e.getAuthor().getName(), param[2])) {
+                Graph g = getGraph(param[2]);
+                RenderGraph(g, e);
+            } else {
+                e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", nu ai creat încă un graf numit *" + param[2] + "*.").queue();
+            }
+        } catch (ArrayIndexOutOfBoundsException exception) {
+            e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", trebuie să îmi spui şi ce graf să îţi trimit, aşa: `!graph display [g?]`.").queue();
         }
-//            File graphFile = new File("graph.png");
-
-
     }
 
     private void RenderGraph(Graph g, MessageReceivedEvent e) {
@@ -51,7 +51,7 @@ public class GraphDisplay implements Runnable {
         List<Vertex> visited = new ArrayList();
         for (Vertex i : allVertices) {
             myGraph.add(mutNode(i.getLabel()));
-            List<Vertex> adjVerteces = g.getAdjVertices(i.getLabel());
+            List<Vertex> adjVerteces = g.getVertexAdjVertices(i.getLabel());
             for (Vertex j : adjVerteces) {
                 if (g.getDir().equalsIgnoreCase("directed") || !visited.contains(j)) {
                     myGraph.add(mutNode(i.getLabel()).addLink(mutNode(j.getLabel())));
@@ -68,16 +68,13 @@ public class GraphDisplay implements Runnable {
 //            Graphviz.fromGraph(myGraph).width(747).render(Format.PNG).toFile(graphFile);
             inputPipe = new PipedInputStream(10000 * 1024);
             outputPipe = new PipedOutputStream(inputPipe);
-            System.out.println("1");
+//            System.out.println("1");
             Graphviz.fromGraph(myGraph).width(500).render(Format.PNG).toOutputStream(outputPipe);
-            System.out.println("2");
+//            System.out.println("2");
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-        e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", acesta este graful tău *" + g.getName() + "*.").addFile(inputPipe, "yourGraph.png").queue();
-        if (Objects.nonNull(inputPipe)) {
-        } else {
-            e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", nu am reuşit să generez o imagine pentru graful tău.").queue();
-        }
+        String fileName = e.getAuthor().getName() + "sGraphDisplay.png";
+        e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", acesta este graful tău *" + g.getName() + "*.").addFile(inputPipe, fileName).queue();
     }
 }

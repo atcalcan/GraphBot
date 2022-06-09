@@ -1,15 +1,25 @@
 package Graphs;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
 
 public class Vertex {
-    String label;
+    @JsonProperty
+    final String label;
 
-    Vertex(String label) {
+    @JsonCreator
+    Vertex(@JsonProperty("label") String label) {
         this.label = label;
     }
 
     public String getLabel() {
+        return this.label;
+    }
+
+    @Override
+    public String toString() {
         return this.label;
     }
 
