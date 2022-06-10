@@ -25,12 +25,12 @@ public class DefinitionDAO {
 
             while (resultSet.next()) {
                 String name = resultSet.getString("name");
-                System.out.println(name);
+//                System.out.println(name);
                 String def = resultSet.getString("def");
                 definitions.putIfAbsent(name, new ArrayList<>());
                 definitions.get(name).add(def);
             }
-            System.out.println("1");
+//            System.out.println("1");
             statement.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);

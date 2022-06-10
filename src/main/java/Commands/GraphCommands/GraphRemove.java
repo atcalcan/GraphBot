@@ -1,5 +1,6 @@
 package Commands.GraphCommands;
 
+import Graphs.AllGraphs;
 import Graphs.Database.DAO.GraphDAO;
 import Graphs.Graph;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -19,17 +20,24 @@ public class GraphRemove implements Runnable {
             String param[] = e.getMessage().getContentRaw().split(" ");
             if (checkGraph(e.getAuthor().getName(), param[2])) {
                 Graph g = getGraph(param[2]);
-                if (param[3].indexOf("(") != 0) {
-                    g.removeVertex(param[3]);
-                    GraphDAO.AddGraph(g);
-                    e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", am eliminat nodul " + param[3] + " la graful tău *" + param[2] + "*.").queue();
+                if (param.length != 3) {
+                    if (param[3].indexOf("(") != 0) {
+                        g.removeVertex(param[3]);
+                        GraphDAO.AddGraph(g);
+                        e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", am eliminat nodul " + param[3] + " la graful tău *" + param[2] + "*.").queue();
+                    } else {
+                        param[3] = param[3].substring(1, param[3].length() - 1);
+                        String[] edge = param[3].split("-");
+                        g.removeEdge(edge[0], edge[1]);
+                        GraphDAO.AddGraph(g);
+                        e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", am eliminat muchia " + param[3] + " la graful tău *" + param[2] + "*.").queue();
+                    }
                 } else {
-                    param[3] = param[3].substring(1, param[3].length() - 1);
-                    String[] edge = param[3].split("-");
-                    g.removeEdge(edge[0], edge[1]);
-                    GraphDAO.AddGraph(g);
-                    e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", am eliminat muchia " + param[3] + " la graful tău *" + param[2] + "*.").queue();
+                    GraphDAO.RemoveGraph(g);
+                    AllGraphs.allGraphs = GraphDAO.getAllDBGraphs();
+                    e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", am şters graful tău *" + param[2] + "* din memorie.").queue();
                 }
+
             } else {
                 e.getChannel().sendMessage(e.getAuthor().getAsMention() + ", nu ai creat încă un graf numit *" + param[2] + "*.").queue();
             }

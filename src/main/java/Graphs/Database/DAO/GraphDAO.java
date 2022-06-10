@@ -42,7 +42,7 @@ public class GraphDAO {
         } catch (SQLException | JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(allGraphs);
+//        System.out.println(allGraphs);
         return allGraphs;
     }
 
@@ -75,7 +75,7 @@ public class GraphDAO {
         }
     }
 
-    private static void RemoveGraph(Graph g) {
+    public static void RemoveGraph(Graph g) {
 //        System.out.println("1");
         PreparedStatement statement;
         try {
