@@ -4,9 +4,15 @@ import net.dv8tion.jda.api.JDABuilder;
 
 public class Bot {
     public static void main(String args[]) throws Exception {
+        new Thread(() -> {
+            try {
+                ServerConfig.main(args);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
 
-        JDA jda = JDABuilder.createDefault("OTgyMzM0NzA2Mzc0ODExNjcw.GZH_oH.oe-6fxOYuGZEG0_EBT1DwCwq6ln5xdnJlK-egg").build();
-//        var allGraphs = new AllGraphs();
+        JDA jda = JDABuilder.createDefault(System.getenv("DISC_TK")).build();
         jda.addEventListener(new GraphCommand());
     }
 }

@@ -1,0 +1,14 @@
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.2">
+    <persistence-unit name="GraphBotPU">
+        <class>Graphs.Graph</class>
+        <class>Graphs.Vertex</class>
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/tjproj"/>
+            <property name="javax.persistence.jdbc.user" value="tj2024"/>
+            <property name="javax.persistence.jdbc.password" value="tj2024"/>
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+        </properties>
+    </persistence-unit>
+</persistence>

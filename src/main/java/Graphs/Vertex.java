@@ -3,19 +3,38 @@ package Graphs;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
+@Table(name = "vertices")
 public class Vertex {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @JsonProperty
-    final String label;
+    @Column(unique = true, nullable = false)
+    private String label;
+
+    public Vertex() {
+    }
 
     @JsonCreator
-    Vertex(@JsonProperty("label") String label) {
+    public Vertex(@JsonProperty("label") String label) {
         this.label = label;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getLabel() {
         return this.label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     @Override
@@ -30,7 +49,9 @@ public class Vertex {
 
     @Override
     public boolean equals(Object obj) {
-        return label.equals(((Vertex) obj).label);
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Vertex vertex = (Vertex) obj;
+        return Objects.equals(label, vertex.label);
     }
-
 }

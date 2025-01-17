@@ -9,8 +9,7 @@ public class GraphHelp implements Runnable {
             "```!graph rmv/remove graphName\n- ŞTERGE DIN MEMORIE GRAFUL CU NUMELE graphName\n!graph rmv/remove graphName nodeName\n- elimină nodul cu numele nodeName din graful cu numele graphName\n!graph rmv/remove graphName (nodeName1-nodeName2)\n- elimină muchia dintre nodurile nodeName1 şi nodeName2 din graful graphName```" +
             "```!graph show\n- arată toate grafurile utilizatorului```" +
             "```!graph display graphName\n- generează şi trimite o reprezentare grafică a grafului selectat\ngraphName - numele grafului```" +
-            "```!graph run command...\ncommand - programul care va rula pe graf\n- încearcă \"!graph run\" pentru mai multe detalii```" +
-            "```!graph def query...\n- trimite definiţiile din baza de date care corespund query-ului oferit```";
+            "```!graph run command...\ncommand - programul care va rula pe graf\n- încearcă \"!graph run\" pentru mai multe detalii```";
 
     public GraphHelp(MessageReceivedEvent e) {
         this.e = e;

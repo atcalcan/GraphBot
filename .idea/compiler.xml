@@ -9,8 +9,5 @@
         <module name="GraphBot" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="GraphBot" target="18" />
-    </bytecodeTargetLevel>
   </component>
 </project>

@@ -3,8 +3,8 @@ package Graphs.Database;
 import java.sql.*;
 
 public class DBManager {
-    private Connection connection;
-    private static DBManager instance = new DBManager();
+    private final Connection connection;
+    private static final DBManager instance = new DBManager();
 
     private DBManager() {
         String url = System.getenv("ENV_DB_URL");
@@ -12,6 +12,7 @@ public class DBManager {
         String pass = System.getenv("ENV_DB_PASS");
         try {
             this.connection = DriverManager.getConnection(url, user, pass);
+            System.out.println("Connected to database");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

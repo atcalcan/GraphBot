@@ -3,23 +3,40 @@ package Graphs;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.persistence.*;
 import java.util.*;
 
+@Entity
+@Table(name = "graphs")
 public class Graph {
-    @JsonProperty
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
     private String user;
+
     @JsonProperty
     private String dir;
+
     @JsonProperty
+    @Column(unique = true, nullable = false)
     private String name;
 
-    public Map<Vertex, List<Vertex>> getAdjVertices() {
-        return adjVertices;
-    }
-
     @JsonProperty
-    private Map<Vertex, List<Vertex>> adjVertices;
+    @ElementCollection
+    @CollectionTable(name = "graph_adj_vertices", joinColumns = @JoinColumn(name = "graph_id"))
+    @MapKeyJoinColumn(name = "vertex_id")
+    @Column(name = "adj_vertices")
+    private Map<Vertex, List<Vertex>> adjVertices = new HashMap<>();
+
+    // Constructors, getters, and setters
+
+    public Graph() {
+    }
 
     public Graph(String user) {
         this.user = user;
@@ -32,6 +49,10 @@ public class Graph {
         this.dir = dir;
         this.name = name;
         this.adjVertices = adjVertices;
+    }
+
+    public Map<Vertex, List<Vertex>> getAdjVertices() {
+        return adjVertices;
     }
 
     public void addVertex(String label) {
@@ -113,5 +134,17 @@ public class Graph {
     public List<Vertex> getAllVertices() {
         Set<Vertex> all = adjVertices.keySet();
         return new ArrayList<>(all);
+    }
+
+    @JsonIgnore
+    public String getAdjVerticesAsJson() throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(adjVertices);
+    }
+
+    @JsonIgnore
+    public void setAdjVerticesFromJson(String json) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        this.adjVertices = mapper.readValue(json, mapper.getTypeFactory().constructMapType(Map.class, Vertex.class, List.class));
     }
 }
